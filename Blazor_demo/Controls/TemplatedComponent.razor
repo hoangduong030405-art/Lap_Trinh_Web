@@ -1,0 +1,25 @@
+@typeparam TItem
+
+<h3>Templated Component</h3>
+
+<p>
+    @Header
+    <div>
+        @foreach(var item in Items){
+            @RepeaterItem(item)
+        }
+    </div>
+    @Footer
+</p>
+
+@code {
+    [Parameter]
+    public RenderFragment Header { get; set; }
+    [Parameter]
+    public RenderFragment Footer { get; set; }
+    [Parameter]
+    public List<TItem> Items { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> RepeaterItem { get; set; }
+}

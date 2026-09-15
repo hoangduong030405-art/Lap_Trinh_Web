@@ -1,0 +1,39 @@
+@page "/product/{id:int}"
+
+@inject IViewProduct viewProduct
+
+<h3>Product Details</h3>
+<br />
+
+<div class="card" style="width: 18rem;">
+    <img src="@product?.ImageLink" class="card-img-top" alt="@product?.Name" />
+    <div class="card-body">
+        <h5 class="card-title">@product?.Name</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@product?.Brand</h6>
+        <hr />
+        <p>
+            Price: <label style="color: darkred">@product?.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</label>
+        </p>
+        <hr />
+        <p class="card-text">@product?.Description</p>
+    </div>
+</div>
+<br />
+<NavLink href="products" class="btn btn-primary">Back to Product Page</NavLink>
+
+@code {
+    private Product? product;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (Id > 0)
+        {
+            product = viewProduct.Execute(Id);
+        }
+    }
+}

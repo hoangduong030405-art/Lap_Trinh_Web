@@ -1,0 +1,116 @@
+@page "/"
+@implements IDisposable
+@inject ICustomerService customerService
+
+<h1>Hello, World</h1>
+Welcome to your new app.
+<br />
+<br />
+Product Name: @product.Name
+<br/>
+<input type="text" @bind-value="product.Name" @bind-value:event="oninput"/>
+<br/>
+<label>
+    <input type="checkbox" @bind-value="isActive"/>
+    &nbsp; Is Active
+</label>
+<br/>
+@isActive
+<br/>
+<p>
+    <label>
+        <input type="radio"
+               value="1"
+               name="group"
+               @onclick="@(()=> selectedGroup = 1)"
+               />
+        1
+    </label>
+    <label>
+        <input type="radio"
+               value="2"
+               name="group"
+               @onclick="@(()=> selectedGroup = 2)" />
+        2
+    </label>
+    <label>
+        <input type="radio"
+               value="3"
+               name="group"
+               @onclick="@(()=> selectedGroup = 3)" />
+        3
+    </label>
+    <br/>
+    @selectedGroup
+</p>
+<p>
+    <select @bind="selectedProductId">
+        <option value="0"></option>
+        @foreach(var prob in products){
+            <option value="@prob.Id">@prob.Name</option>
+        }
+    </select>
+    <br/>
+    @selectedProductId
+</p>
+<br/>
+<VisibilityComponent @ref="visibilityComponent"></VisibilityComponent>
+<br />
+<button @onclick="Toggle">Toggle Visibility</button>
+
+<TemplatedComponent Items="products" TItem="Product">
+    <Header>
+        <b>Welcome to my course</b>
+    </Header>
+
+    <RepeaterItem Context="item">
+        <i>Name: @item.Name</i>
+        <p>Brand: @item.Brand</p>
+        <p>Description: @item.Description</p>
+    </RepeaterItem>
+
+    <Footer>
+        <div style="font-size:10px">
+            Feel free to leave a comment. Thanks
+        </div>
+    </Footer>
+</TemplatedComponent>
+
+<br/>
+<br/>
+<text>Guid:</text>@customerService.Uid
+<br />
+<br />
+@if(customer != null){
+    <text>Customer Info: </text>@customer.Name
+}
+
+@code{
+    private Customer customer;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        customer = customerService.GetCustomerById(2);
+    }
+
+    public void Dispose()
+    {
+    }
+
+    private VisibilityComponent visibilityComponent;
+
+    void Toggle(){
+        this.visibilityComponent.SetVisibility();
+    }
+
+    private int selectedProductId = 0;
+    private List<Product> products = new List<Product> {
+        new Product { Id = 495, Brand = "maybelline", Name = "Maybelline Face Studio Master Hi-Light Light Booster Bronzer", Price = 14.99, ImageLink = "https://d3t32hsnjxo7q6.cloudfront.net/i/991799d3e70b8856686979f8ff6dcfe0_ra,w158,h184_pa,w158,h184.png", Description = "Maybelline Face Studio Master Light Boosting bronzer has expert balance of shade shimmer illuminator." },
+        new Product { Id = 488, Brand = "maybelline", Name = "Maybelline Fit Me Bronzer", Price = 10.29, ImageLink = "https://d3t32hsnjxo7q6.cloudfront.net/i/d4f7d82b4858c622bb3c1cef07b9d850_ra,w158,h184_pa,w158,h184.png", Description = "Maybelline Fit Me Bronzer gives a natural-looking glow." },
+        new Product { Id = 477, Brand = "maybelline", Name = "Maybelline Facestudio Master Contour Kit", Price = 15.99, ImageLink = "https://d3t32hsnjxo7q6.cloudfront.net/i/4f731de249cbd4cb819ea7f5f4cfb5c3_ra,w158,h184_pa,w158,h184.png", Description = "Maybelline Facestudio Master Contour Kit contours in 3 easy steps." }
+    };
+    private int selectedGroup;
+    private bool isActive = false;
+    private Product product = new Product { Id = 439, Brand = "maybelline", Name = "Maybelline Fit Me Blush", Price = 10.29, ImageLink = "https://d3t32hsnjxo7q6.cloudfront.net/i/53d5f825461117c0d96946e1029510b0_ra,w158,h184_pa,w158,h184.png", Description = "Maybelline Fit Me Blush is a lightweight powder that delivers natural all-day color." };
+}

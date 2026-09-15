@@ -1,0 +1,37 @@
+﻿@page "/dynamic"
+@using Microsoft.AspNetCore.Components.Rendering
+
+<h3>Our First Dynamic Content</h3>
+<br />
+<br />
+
+
+<button @onclick="HandleBlazerServerClick">Blazer Server</button>
+<button @onclick="HandleBlazerWebAssemblyClick">Blazer WebAssembly</button>
+
+<br />
+<br />
+
+<h3>@title</h3>
+<br />
+<div>
+    @content
+</div>
+
+@code {
+    private string title = "";
+    private string content = "";
+
+
+    private void HandleBlazerServerClick()
+    {
+        title = "Blazer Server";
+        content = "Blazer Server is a server-side web framework that allows developers to build interactive web applications using C# and .NET. It runs on the server and uses SignalR to communicate with the client, providing a rich user experience without the need for JavaScript.";
+    }
+
+    private void HandleBlazerWebAssemblyClick()
+    {
+        title = "Blazer WebAssembly";
+        content = "Blazer WebAssembly is a client-side web framework that allows developers to build interactive web applications using C# and .NET. It runs in the browser using WebAssembly providing a rich user experience without the need for JavaScript.";
+    }
+}
