@@ -6,4 +6,6 @@ namespace eShop.UseCases.ShoppingCartScreen;
 public interface IViewShoppingCartUseCase
 {
     Task<Order> ExecuteAsync();
+    Task<Order> Execute();
 }
+

@@ -1,0 +1,56 @@
+@using eShop.Web.CustomerPortal.ViewModels
+
+<div class="card p-4 rounded-4 shadow-sm border-0">
+    <h3 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-person-badge text-primary"></i> Shipping Information
+    </h3>
+    <hr class="mt-0 mb-4" />
+
+    <EditForm Model="customer" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="alert alert-danger py-2 small" />
+
+        <div class="form-group-modern">
+            <label for="name" class="form-label-modern"><i class="bi bi-person me-1"></i> Full Name</label>
+            <InputText id="name" @bind-Value="customer.CustomerName" class="form-input-modern" placeholder="e.g. John Doe" />
+        </div>
+
+        <div class="form-group-modern">
+            <label for="address" class="form-label-modern"><i class="bi bi-geo-alt me-1"></i> Street Address</label>
+            <InputText id="address" @bind-Value="customer.CustomerAddress" class="form-input-modern" placeholder="e.g. 123 Main St, Apt 4B" />
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 form-group-modern">
+                <label for="city" class="form-label-modern"><i class="bi bi-building me-1"></i> City</label>
+                <InputText id="city" @bind-Value="customer.CustomerCity" class="form-input-modern" placeholder="e.g. New York" />
+            </div>
+
+            <div class="col-md-6 form-group-modern">
+                <label for="province" class="form-label-modern"><i class="bi bi-map me-1"></i> State / Province</label>
+                <InputText id="province" @bind-Value="customer.CustomerStateProvince" class="form-input-modern" placeholder="e.g. NY" />
+            </div>
+        </div>
+
+        <div class="form-group-modern">
+            <label for="country" class="form-label-modern"><i class="bi bi-globe me-1"></i> Country</label>
+            <InputText id="country" @bind-Value="customer.CustomerCountry" class="form-input-modern" placeholder="e.g. United States" />
+        </div>
+
+        <button type="submit" class="btn-modern-primary w-100 py-3 mt-3 fs-6">
+            <i class="bi bi-check2-circle fs-5"></i> Confirm & Place Order
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    private CustomerViewModel customer = new CustomerViewModel();
+
+    [Parameter]
+    public EventCallback<CustomerViewModel> OnCustomerInfoSubmitted { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        await OnCustomerInfoSubmitted.InvokeAsync(customer);
+    }
+}

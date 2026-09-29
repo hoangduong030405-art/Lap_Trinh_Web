@@ -3,8 +3,12 @@ using System.Collections.Generic;
 
 namespace eShop.UseCases.SearchProductScreen;
 
-public interface ISearchProduct
+public interface ISearchProductUseCase
 {
     IEnumerable<Product> Execute(string? filter = null);
-    IEnumerable<Product> GetProducts(string? filter = null);
+}
+
+// Backward-compatible alias
+public interface ISearchProduct : ISearchProductUseCase
+{
 }

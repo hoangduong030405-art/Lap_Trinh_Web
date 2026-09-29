@@ -1,0 +1,34 @@
+<div class="search-container">
+    <div class="search-box-pill">
+        <i class="bi bi-search text-muted me-2 fs-5"></i>
+        <input type="text" 
+               class="search-input-field" 
+               id="filter" 
+               placeholder="Search sneakers, apparel, brands..." 
+               @bind-value="filter"
+               @onkeyup="HandleKeyUp" />
+        <button type="button" class="btn-modern-primary" @onclick="HandleSearch">
+            Search
+        </button>
+    </div>
+</div>
+
+@code {
+    private string? filter;
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private void HandleSearch()
+    {
+        OnSearch.InvokeAsync(filter);
+    }
+
+    private void HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            HandleSearch();
+        }
+    }
+}

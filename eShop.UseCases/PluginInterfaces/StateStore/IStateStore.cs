@@ -1,12 +1,11 @@
 using System;
-using System.Threading.Tasks;
 
-namespace eShop.UseCases.PluginInterfaces.UI;
+namespace eShop.UseCases.PluginInterfaces.StateStore;
 
-public interface IShoppingCartStateStore
+public interface IStateStore
 {
     void AddStateChangeListeners(Action listener);
     void RemoveStateChangeListeners(Action listener);
     void BroadcastStateChange();
-    Task<int> GetItemsCount();
+    void BroadCastStateChange() => BroadcastStateChange();
 }

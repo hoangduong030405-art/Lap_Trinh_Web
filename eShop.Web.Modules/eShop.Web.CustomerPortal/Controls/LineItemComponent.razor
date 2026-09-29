@@ -1,0 +1,59 @@
+@if (LineItem != null && LineItem.Product != null)
+{
+    <li class="cart-item-row d-flex align-items-center justify-content-between flex-wrap gap-3 list-unstyled">
+        <div class="d-flex align-items-center gap-3">
+            <img src="@LineItem.Product.ImageLink" class="cart-item-thumb" alt="@LineItem.Product.Name" />
+            <div>
+                <span class="brand-badge-pill" style="font-size: 0.68rem; padding: 0.15rem 0.5rem;">@LineItem.Product.Brand</span>
+                <h5 class="fw-bold mb-1" style="font-size: 1.05rem;">@LineItem.Product.Name</h5>
+                <div class="text-muted small">
+                    Price: <strong class="text-danger">@LineItem.Product.Price.ToString("c")</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-4">
+            <div class="d-flex align-items-center gap-2">
+                <label class="text-muted small fw-semibold">Qty:</label>
+                <input type="number" min="0" value="@LineItem.Quantity" @onchange="HandleQuantityChange" class="form-control text-center fw-bold" style="width: 75px; border-radius: 8px; border: 1.5px solid #cbd5e1;" />
+            </div>
+
+            <div class="text-end" style="min-width: 90px;">
+                <div class="fw-bold fs-5 text-danger">@((LineItem.Product.Price * LineItem.Quantity).ToString("c"))</div>
+            </div>
+
+            <button class="btn btn-outline-danger btn-sm rounded-pill px-3" @onclick="HandleDelete" title="Remove item">
+                <i class="bi bi-trash3"></i> Delete
+            </button>
+        </div>
+    </li>
+}
+
+@code {
+    [Parameter]
+    public OrderLineItem? LineItem { get; set; }
+
+    [Parameter]
+    public EventCallback<OrderLineItem> OnDeleteProduct { get; set; }
+
+    [Parameter]
+    public EventCallback<OrderLineItem> OnUpdateQuantity { get; set; }
+
+    private async Task HandleQuantityChange(ChangeEventArgs e)
+    {
+        if (LineItem != null && int.TryParse(e.Value?.ToString(), out int qty))
+        {
+            if (qty < 0) qty = 0;
+            LineItem.Quantity = qty;
+            await OnUpdateQuantity.InvokeAsync(LineItem);
+        }
+    }
+
+    private async Task HandleDelete()
+    {
+        if (LineItem != null)
+        {
+            await OnDeleteProduct.InvokeAsync(LineItem);
+        }
+    }
+}

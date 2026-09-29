@@ -1,0 +1,31 @@
+@if (product != null)
+{
+    <div class="modern-product-card">
+        <div class="card-img-container">
+            <img src="@product.ImageLink" alt="@product.Name" loading="lazy" />
+        </div>
+        <div class="card-content">
+            <div>
+                <span class="brand-badge-pill">@product.Brand</span>
+                <h3 class="product-card-title">
+                    <NavLink href="@($"/product/{product.Id}")">@product.Name</NavLink>
+                </h3>
+                <p class="product-card-desc">@product.Description</p>
+            </div>
+            <div class="card-footer-action">
+                <div class="d-flex align-items-baseline">
+                    <span class="text-muted me-1 fw-semibold" style="font-size: 0.9rem;">Price:</span>
+                    <strong class="text-danger fw-bold fs-5">@product.Price.ToString("c")</strong>
+                </div>
+                <NavLink href="@($"/product/{product.Id}")" class="btn-modern-primary" style="padding: 0.45rem 1rem; font-size: 0.88rem;">
+                    View <i class="bi bi-arrow-right"></i>
+                </NavLink>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Product? product { get; set; }
+}

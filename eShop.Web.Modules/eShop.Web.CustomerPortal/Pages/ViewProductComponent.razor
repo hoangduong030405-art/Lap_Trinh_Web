@@ -1,0 +1,76 @@
+@page "/product/{id:int}"
+
+@inject IViewProductUseCase viewProductUseCase
+@inject IAddProductToCartUseCase addProductToCartUseCase
+@inject NavigationManager navigationManager
+
+<div class="mb-4">
+    <NavLink href="/products" class="btn-modern-outline">
+        <i class="bi bi-arrow-left"></i> Back to Collection
+    </NavLink>
+</div>
+
+@if (product != null)
+{
+    <div class="product-detail-card">
+        <div class="row g-0">
+            <div class="col-lg-6 product-detail-img-box">
+                <img src="@product.ImageLink" alt="@product.Name" />
+            </div>
+            <div class="col-lg-6 d-flex flex-column justify-content-center p-4 p-md-5">
+                <div>
+                    <span class="brand-badge-pill mb-3">@product.Brand</span>
+                    <h1 class="h2 fw-bold text-dark mb-2">@product.Name</h1>
+                    <div class="detail-price-box">
+                        <div class="price-label">Price</div>
+                        <div class="price-value text-danger">@product.Price.ToString("c")</div>
+                    </div>
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-muted mb-2">Description</h6>
+                        <p class="text-secondary" style="font-size: 1.05rem; line-height: 1.6;">
+                            @product.Description
+                        </p>
+                    </div>
+
+                    <div class="d-flex align-items-center gap-3 pt-3 border-top">
+                        <button class="btn-modern-primary" style="padding: 0.85rem 2rem; font-size: 1.05rem;" @onclick="AddToCart">
+                            <i class="bi bi-cart-plus-fill fs-5"></i> Add to Shopping Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card p-5 text-center rounded-4 shadow-sm border-0">
+        <div class="spinner-border text-primary mx-auto mb-3" role="status"></div>
+        <p class="text-muted mb-0">Loading product details...</p>
+    </div>
+}
+
+@code {
+    private Product? product;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Id > 0)
+        {
+            product = viewProductUseCase.Execute(Id);
+        }
+    }
+
+    private async Task AddToCart()
+    {
+        if (product != null)
+        {
+            await addProductToCartUseCase.Execute(product.Id);
+            navigationManager.NavigateTo("/cart");
+        }
+    }
+}

@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using eShop.UseCases.PluginInterfaces.DataStore;
+using eShop.UseCases.PluginInterfaces.StateStore;
 using eShop.UseCases.PluginInterfaces.UI;
 
 namespace eShop.UseCases.ViewProductScreen;
@@ -26,12 +26,12 @@ public class AddProductToCartUseCase : IAddProductToCartUseCase, IAddProductToSh
         if (product != null)
         {
             await shoppingCart.AddProductAsync(product, quantity);
-            stateStore.BroadcastStateChange();
+            this.stateStore.UpdateLineItemsCount();
         }
     }
 
-    public void Execute(int productId)
+    public Task Execute(int productId)
     {
-        ExecuteAsync(productId, 1).GetAwaiter().GetResult();
+        return ExecuteAsync(productId, 1);
     }
 }

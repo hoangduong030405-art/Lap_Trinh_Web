@@ -1,6 +1,6 @@
 <Solution>
   <Project Path="Blazor_demo/Blazor_demo.csproj" />
   <Project Path="eShop.CoreBusiness/eShop.CoreBusiness.csproj" Id="cdeeee67-1cef-4fc3-a79b-dec8dbabe113" />
-  <Project Path="eShop.DataStore.HardCoded/eShop.DataStore.HardCoded.csproj" Id="a5300399-69f5-4c83-9650-88e752f5432f" />
+  <Project Path="Plugins/eShop.DataStore.HardCoded/eShop.DataStore.HardCoded.csproj" Id="a5300399-69f5-4c83-9650-88e752f5432f" />
   <Project Path="eShop.UseCases/eShop.UseCases.csproj" Id="da70367d-f9bd-44fb-b88f-08ecb2da9086" />
 </Solution>

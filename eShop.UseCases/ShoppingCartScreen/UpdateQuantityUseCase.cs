@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using eShop.CoreBusiness.Models;
+using eShop.UseCases.PluginInterfaces.StateStore;
 using eShop.UseCases.PluginInterfaces.UI;
 
 namespace eShop.UseCases.ShoppingCartScreen;
@@ -18,7 +18,12 @@ public class UpdateQuantityUseCase : IUpdateQuantityUseCase
     public async Task<Order> ExecuteAsync(int productId, int quantity)
     {
         var order = await shoppingCart.UpdateQuantityAsync(productId, quantity);
-        stateStore.BroadcastStateChange();
+        this.stateStore.UpdateLineItemsCount();
         return order;
+    }
+
+    public Task<Order> Execute(int productId, int quantity)
+    {
+        return ExecuteAsync(productId, quantity);
     }
 }

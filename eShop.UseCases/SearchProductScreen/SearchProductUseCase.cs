@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 namespace eShop.UseCases.SearchProductScreen;
 
-public class Searchproduct : ISearchProduct
+public class SearchProductUseCase : ISearchProductUseCase, ISearchProduct
 {
     private readonly IProductRepository productRepository;
 
-    public Searchproduct(IProductRepository productRepository)
+    public SearchProductUseCase(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }
@@ -24,9 +24,9 @@ public class Searchproduct : ISearchProduct
     }
 }
 
-public class SearchProduct : Searchproduct
+public class Searchproduct : SearchProductUseCase
 {
-    public SearchProduct(IProductRepository productRepository) : base(productRepository)
+    public Searchproduct(IProductRepository productRepository) : base(productRepository)
     {
     }
 }

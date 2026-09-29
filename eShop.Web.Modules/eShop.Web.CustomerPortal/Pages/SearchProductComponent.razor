@@ -1,0 +1,67 @@
+@page "/"
+@page "/products"
+
+@inject ISearchProductUseCase searchProduct
+
+<div class="hero-banner">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <span class="badge bg-primary-subtle text-primary-emphasis px-3 py-2 rounded-pill fw-semibold mb-3">
+                <i class="bi bi-stars me-1"></i> Summer Collection 2026
+            </span>
+            <h1 class="hero-title">Discover Premium Footwear & Apparel</h1>
+            <p class="hero-subtitle">
+                Explore our curated collection of top-tier sportswear designed for peak performance and modern street style.
+            </p>
+        </div>
+        <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
+            <div class="d-inline-flex align-items-center gap-3 bg-white bg-opacity-10 px-4 py-3 rounded-4 backdrop-blur border border-white border-opacity-10">
+                <i class="bi bi-truck fs-1 text-info"></i>
+                <div class="text-start">
+                    <div class="fw-bold text-white">Free Fast Shipping</div>
+                    <small class="text-white-50">On orders over $100</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<SearchBarComponent OnSearch="HandleSearch"></SearchBarComponent>
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="h4 fw-bold mb-0">Featured Products</h2>
+    <span class="text-muted small">Showing @(products?.Count() ?? 0) items</span>
+</div>
+
+@if (products != null && products.Any())
+{
+    <div class="products-grid">
+        @foreach (var prod in products)
+        {
+            <ProductCardComponent product="prod" />
+        }
+    </div>
+}
+else
+{
+    <div class="card p-5 text-center my-4 border-0 shadow-sm rounded-4">
+        <i class="bi bi-search fs-1 text-muted mb-3"></i>
+        <h4 class="fw-bold">No products found</h4>
+        <p class="text-muted">Try adjusting your search criteria or check back later.</p>
+    </div>
+}
+
+@code {
+    private IEnumerable<Product>? products;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        products = searchProduct.Execute();
+    }
+
+    private void HandleSearch(string filter)
+    {
+        products = searchProduct.Execute(filter);
+    }
+}

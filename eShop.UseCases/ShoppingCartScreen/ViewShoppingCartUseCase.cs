@@ -17,4 +17,9 @@ public class ViewShoppingCartUseCase : IViewShoppingCartUseCase
     {
         return shoppingCart.GetOrderAsync();
     }
+
+    public Task<Order> Execute()
+    {
+        return ExecuteAsync();
+    }
 }

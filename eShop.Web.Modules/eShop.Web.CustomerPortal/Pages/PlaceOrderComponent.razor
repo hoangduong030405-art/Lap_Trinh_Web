@@ -1,0 +1,65 @@
+@page "/placeorder"
+
+@inject IViewShoppingCartUseCase viewShoppingCartUseCase
+@inject IPlaceOrderUseCase placeOrderUseCase
+@inject NavigationManager navigationManager
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Checkout</h1>
+        <p class="text-muted small mb-0">Complete your shipping address to finalize the order</p>
+    </div>
+    <NavLink href="/cart" class="btn-modern-outline">
+        <i class="bi bi-arrow-left"></i> Back to Cart
+    </NavLink>
+</div>
+
+@if (order != null)
+{
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <CustomerFormComponent OnCustomerInfoSubmitted="HandleCustomerInfoSubmitted" />
+        </div>
+        <div class="col-lg-5">
+            <OrderSummaryComponent Order="order" HidePlaceOrder="true" />
+        </div>
+    </div>
+}
+else
+{
+    <div class="card p-5 text-center rounded-4 shadow-sm border-0 my-4">
+        <div class="spinner-border text-primary mx-auto mb-3" role="status"></div>
+        <p class="text-muted mb-0">Preparing checkout...</p>
+    </div>
+}
+
+@code {
+    private Order? order;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            order = await viewShoppingCartUseCase.Execute();
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCustomerInfoSubmitted(CustomerViewModel customer)
+    {
+        if (order != null)
+        {
+            order.CustomerName = customer.CustomerName;
+            order.CustomerAddress = customer.CustomerAddress;
+            order.CustomerCity = customer.CustomerCity;
+            order.CustomerStateProvince = customer.CustomerStateProvince;
+            order.CustomerCountry = customer.CustomerCountry;
+
+            var orderUniqueId = await placeOrderUseCase.Execute(order);
+            if (!string.IsNullOrEmpty(orderUniqueId))
+            {
+                navigationManager.NavigateTo($"/orderconfirm/{orderUniqueId}");
+            }
+        }
+    }
+}

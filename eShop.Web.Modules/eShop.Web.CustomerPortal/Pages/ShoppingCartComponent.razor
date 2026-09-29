@@ -1,0 +1,87 @@
+@page "/cart"
+
+@inject IViewShoppingCartUseCase viewShoppingCartUseCase
+@inject IDeleteProductUseCase deleteProductUseCase
+@inject IUpdateQuantityUseCase updateQuantityUseCase
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Shopping Cart</h1>
+        <p class="text-muted small mb-0">Review your selected items and proceed to checkout</p>
+    </div>
+    <NavLink href="/products" class="btn-modern-outline">
+        <i class="bi bi-arrow-left"></i> Continue Shopping
+    </NavLink>
+</div>
+
+@if (order == null)
+{
+    <div class="card p-5 text-center rounded-4 shadow-sm border-0 my-4">
+        <div class="spinner-border text-primary mx-auto mb-3" role="status"></div>
+        <p class="text-muted mb-0">Loading your shopping cart...</p>
+    </div>
+}
+else if (order.LineItems == null || order.LineItems.Count == 0)
+{
+    <div class="card p-5 text-center rounded-4 shadow-sm border-0 my-4">
+        <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+            <i class="bi bi-cart-x fs-1"></i>
+        </div>
+        <h3 class="h4 fw-bold mb-2">Your shopping cart is empty</h3>
+        <p class="text-muted mb-4">Discover our top footwear and apparel to add items to your cart.</p>
+        <div>
+            <NavLink href="/products" class="btn-modern-primary">
+                <i class="bi bi-bag-fill"></i> Start Shopping Now
+            </NavLink>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <ul class="list-unstyled p-0 m-0">
+                @foreach (var item in order.LineItems)
+                {
+                    <LineItemComponent LineItem="@item"
+                                       OnDeleteProduct="HandleDeleteProduct"
+                                       OnUpdateQuantity="HandleUpdateQuantity">
+                    </LineItemComponent>
+                }
+            </ul>
+
+            <div class="mt-4">
+                <NavLink href="/products" class="btn-modern-outline">
+                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                </NavLink>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <OrderSummaryComponent Order="@order"></OrderSummaryComponent>
+        </div>
+    </div>
+}
+
+@code {
+    private Order? order;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            order = await viewShoppingCartUseCase.Execute();
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleDeleteProduct(OrderLineItem item)
+    {
+        order = await deleteProductUseCase.Execute(item.ProductId);
+    }
+
+    private async Task HandleUpdateQuantity(OrderLineItem item)
+    {
+        order = await updateQuantityUseCase.Execute(item.ProductId, item.Quantity);
+    }
+}

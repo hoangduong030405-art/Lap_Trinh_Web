@@ -1,0 +1,64 @@
+@inject NavigationManager navigationManager
+
+<div class="order-summary-box">
+    <h3 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-receipt text-primary"></i> Order Summary
+    </h3>
+    
+    <div class="summary-row text-secondary">
+        <span>Total Items</span>
+        <span class="fw-bold text-dark">@itemsCount items</span>
+    </div>
+
+    <div class="summary-row text-secondary">
+        <span>Shipping</span>
+        <span class="text-success fw-bold">FREE</span>
+    </div>
+
+    <div class="summary-total-row">
+        <div>
+            <div class="fw-bold fs-6 text-dark">Total Amount</div>
+            <small class="text-muted">Taxes included</small>
+        </div>
+        <div class="summary-total-price">@itemsTotalPrice.ToString("c")</div>
+    </div>
+
+    @if (!HidePlaceOrder)
+    {
+        <button class="btn-modern-primary w-100 py-3 fs-6" @onclick="PlaceOrder">
+            Proceed to Checkout <i class="bi bi-arrow-right"></i>
+        </button>
+    }
+</div>
+
+@code {
+    int itemsCount = 0;
+    double itemsTotalPrice = 0;
+
+    [Parameter]
+    public Order? Order { get; set; }
+
+    [Parameter]
+    public bool HidePlaceOrder { get; set; } = false;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Order != null && Order.LineItems != null)
+        {
+            itemsCount = Order.LineItems.Sum(x => x.Quantity);
+            itemsTotalPrice = 0;
+            Order.LineItems.ForEach(x => itemsTotalPrice += x.Price * x.Quantity);
+        }
+        else
+        {
+            itemsCount = 0;
+            itemsTotalPrice = 0;
+        }
+    }
+
+    private void PlaceOrder()
+    {
+        navigationManager.NavigateTo("/placeorder");
+    }
+}

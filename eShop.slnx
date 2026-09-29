@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/eShop.Web.Modules/" />
+  <Folder Name="/Plugins/" />
+  <Project Path="eShop.Web/eShop.Web.csproj" />
+  <Project Path="eShop.CoreBusiness/eShop.CoreBusiness.csproj" />
+  <Project Path="eShop.UseCases/eShop.UseCases.csproj" />
+  <Project Path="eShop.Web.Modules/eShop.Web.AdminPortal/eShop.Web.AdminPortal.csproj" />
+  <Project Path="eShop.Web.Modules/eShop.Web.Common/eShop.Web.Common.csproj" />
+  <Project Path="eShop.Web.Modules/eShop.Web.CustomerPortal/eShop.Web.CustomerPortal.csproj" />
+  <Project Path="Plugins/eShop.DataStore.HardCoded/eShop.DataStore.HardCoded.csproj" />
+  <Project Path="Plugins/eShop.ShoppingCart.LocalStorage/eShop.ShoppingCart.LocalStorage.csproj" />
+  <Project Path="Plugins/eShop.StateStore.DI/eShop.StateStore.DI.csproj" />
+</Solution>

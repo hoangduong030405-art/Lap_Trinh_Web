@@ -3,11 +3,11 @@ using eShop.UseCases.PluginInterfaces.DataStore;
 
 namespace eShop.UseCases.ViewProductScreen;
 
-public class ViewProduct : IViewProduct
+public class ViewProductUseCase : IViewProductUseCase, IViewProduct
 {
     private readonly IProductRepository productRepository;
 
-    public ViewProduct(IProductRepository productRepository)
+    public ViewProductUseCase(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }
@@ -20,5 +20,12 @@ public class ViewProduct : IViewProduct
     public Product? GetProductById(int id)
     {
         return Execute(id);
+    }
+}
+
+public class ViewProduct : ViewProductUseCase
+{
+    public ViewProduct(IProductRepository productRepository) : base(productRepository)
+    {
     }
 }
