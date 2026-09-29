@@ -1,0 +1,36 @@
+@using eShop.UseCases.ViewProductScreen
+@inject IAddProductToCartUseCase addProductToCartUseCase
+
+<div class="input-group mb-3" style="max-width: 320px;">
+    <span class="input-group-text">Qty</span>
+    <input type="number" class="form-control text-center" @bind="quantity" min="1" max="99" />
+    <button class="btn btn-success" type="button" @onclick="HandleAddToCart">
+        <span class="oi oi-cart" aria-hidden="true"></span> Add to Cart
+    </button>
+</div>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success alert-dismissible fade show py-2" role="alert" style="max-width: 350px;">
+        <span>@message</span>
+        <NavLink href="cart" class="alert-link ms-2">View Cart</NavLink>
+        <button type="button" class="btn-close py-2" @onclick="() => message = string.Empty"></button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int ProductId { get; set; }
+
+    private int quantity = 1;
+    private string message = string.Empty;
+
+    private async Task HandleAddToCart()
+    {
+        if (ProductId > 0 && quantity > 0)
+        {
+            await addProductToCartUseCase.ExecuteAsync(ProductId, quantity);
+            message = "Added to cart successfully!";
+        }
+    }
+}

@@ -1,0 +1,37 @@
+@using eShop.UseCases.PluginInterfaces.UI
+@implements IDisposable
+@inject IShoppingCartStateStore cartStateStore
+
+<span class="badge rounded-pill bg-danger ms-1">
+    @count
+</span>
+
+@code {
+    private int count = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cartStateStore.AddStateChangeListeners(HandleLineItemsCountChanged);
+        count = await cartStateStore.GetItemsCount();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            count = await cartStateStore.GetItemsCount();
+            StateHasChanged();
+        }
+    }
+
+    private async void HandleLineItemsCountChanged()
+    {
+        count = await cartStateStore.GetItemsCount();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        cartStateStore.RemoveStateChangeListeners(HandleLineItemsCountChanged);
+    }
+}

@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 
 <PageTitle>Blazor_demo</PageTitle>
 
@@ -9,6 +9,10 @@
 
     <main>
         <div class="top-row px-4">
+            <NavLink class="btn btn-outline-primary d-flex align-items-center me-3" href="cart">
+                <span class="oi oi-cart me-1" aria-hidden="true"></span> Cart
+                <DisplayCountComponent />
+            </NavLink>
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 

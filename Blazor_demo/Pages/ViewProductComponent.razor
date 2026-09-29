@@ -5,21 +5,36 @@
 <h3>Product Details</h3>
 <br />
 
-<div class="card" style="width: 18rem;">
-    <img src="@product?.ImageLink" class="card-img-top" alt="@product?.Name" />
-    <div class="card-body">
-        <h5 class="card-title">@product?.Name</h5>
-        <h6 class="card-subtitle mb-2 text-muted">@product?.Brand</h6>
-        <hr />
-        <p>
-            Price: <label style="color: darkred">@product?.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</label>
-        </p>
-        <hr />
-        <p class="card-text">@product?.Description</p>
+@if (product != null)
+{
+    <div class="card shadow-sm mb-4" style="max-width: 560px;">
+        <div class="row g-0">
+            <div class="col-md-5 text-center p-3 d-flex align-items-center justify-content-center">
+                <img src="@product.ImageLink" class="img-fluid rounded-start" alt="@product.Name" style="max-height: 250px; object-fit: contain;" />
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted text-uppercase">@product.Brand</h6>
+                    <p class="fs-4 text-danger fw-bold mb-2">
+                        @product.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+                    </p>
+                    <p class="card-text text-secondary" style="font-size: 0.9rem;">@product.Description</p>
+                    <hr />
+                    <AddToCartComponent ProductId="@product.Id"></AddToCartComponent>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-<br />
-<NavLink href="products" class="btn btn-primary">Back to Product Page</NavLink>
+}
+else
+{
+    <p class="text-muted">Loading product details...</p>
+}
+
+<NavLink href="products" class="btn btn-outline-primary">
+    <span class="oi oi-arrow-left"></span> Back to Product Page
+</NavLink>
 
 @code {
     private Product? product;

@@ -1,0 +1,79 @@
+@using eShop.CoreBusiness.Models
+
+@if (LineItem != null)
+{
+    <tr>
+        <td style="width: 80px;">
+            @if (!string.IsNullOrEmpty(LineItem.Product?.ImageLink))
+            {
+                <img src="@LineItem.Product.ImageLink" alt="@LineItem.Product.Name" style="max-height: 50px; max-width: 50px; object-fit: contain;" />
+            }
+        </td>
+        <td>
+            <NavLink href="@($"product/{LineItem.ProductId}")" class="fw-semibold text-decoration-none">
+                @LineItem.Product?.Name
+            </NavLink>
+            <br />
+            <small class="text-muted">@LineItem.Product?.Brand</small>
+        </td>
+        <td>
+            @LineItem.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+        </td>
+        <td style="width: 130px;">
+            <div class="input-group input-group-sm">
+                <button class="btn btn-outline-secondary" type="button" @onclick="Decrement">
+                    -
+                </button>
+                <input type="text" class="form-control text-center" value="@LineItem.Quantity" readonly style="max-width: 45px;" />
+                <button class="btn btn-outline-secondary" type="button" @onclick="Increment">
+                    +
+                </button>
+            </div>
+        </td>
+        <td class="fw-bold text-danger">
+            @LineItem.Total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))
+        </td>
+        <td style="width: 50px;">
+            <button class="btn btn-sm btn-outline-danger" title="Remove" @onclick="Delete">
+                <span class="oi oi-trash"></span>
+            </button>
+        </td>
+    </tr>
+}
+
+@code {
+    [Parameter]
+    public OrderLineItem? LineItem { get; set; }
+
+    [Parameter]
+    public EventCallback<OrderLineItem> OnQuantityUpdated { get; set; }
+
+    [Parameter]
+    public EventCallback<OrderLineItem> OnDeleted { get; set; }
+
+    private async Task Increment()
+    {
+        if (LineItem != null)
+        {
+            LineItem.Quantity++;
+            await OnQuantityUpdated.InvokeAsync(LineItem);
+        }
+    }
+
+    private async Task Decrement()
+    {
+        if (LineItem != null && LineItem.Quantity > 1)
+        {
+            LineItem.Quantity--;
+            await OnQuantityUpdated.InvokeAsync(LineItem);
+        }
+    }
+
+    private async Task Delete()
+    {
+        if (LineItem != null)
+        {
+            await OnDeleted.InvokeAsync(LineItem);
+        }
+    }
+}

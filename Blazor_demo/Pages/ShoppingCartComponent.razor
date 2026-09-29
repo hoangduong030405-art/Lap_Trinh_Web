@@ -1,0 +1,98 @@
+@page "/cart"
+@using eShop.CoreBusiness.Models
+@using eShop.UseCases.ShoppingCartScreen
+@using eShop.UseCases.PluginInterfaces.UI
+@inject IViewShoppingCartUseCase viewShoppingCartUseCase
+@inject IUpdateQuantityUseCase updateQuantityUseCase
+@inject IDeleteProductFromCartUseCase deleteProductFromCartUseCase
+
+<h3>Shopping Cart</h3>
+<hr />
+
+@if (order == null)
+{
+    <p><em>Loading cart...</em></p>
+}
+else if (order.LineItems == null || order.LineItems.Count == 0)
+{
+    <div class="alert alert-info py-4 text-center my-4">
+        <h5>Your shopping cart is empty</h5>
+        <p class="text-muted">Looks like you haven't added any products yet.</p>
+        <NavLink href="products" class="btn btn-primary mt-2">
+            <span class="oi oi-cart"></span> Shop Products Now
+        </NavLink>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 80px;">Image</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th style="width: 130px;">Quantity</th>
+                            <th>Total</th>
+                            <th style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.LineItems)
+                        {
+                            <OrderLineItemComponent LineItem="@item"
+                                                    OnQuantityUpdated="HandleQuantityUpdated"
+                                                    OnDeleted="HandleDeleted">
+                            </OrderLineItemComponent>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between my-3">
+                <NavLink href="products" class="btn btn-outline-secondary">
+                    <span class="oi oi-arrow-left"></span> Continue Shopping
+                </NavLink>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <OrderSummaryComponent Order="@order"></OrderSummaryComponent>
+        </div>
+    </div>
+}
+
+@code {
+    private Order? order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCartAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadCartAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadCartAsync()
+    {
+        order = await viewShoppingCartUseCase.ExecuteAsync();
+    }
+
+    private async Task HandleQuantityUpdated(OrderLineItem item)
+    {
+        order = await updateQuantityUseCase.ExecuteAsync(item.ProductId, item.Quantity);
+    }
+
+    private async Task HandleDeleted(OrderLineItem item)
+    {
+        order = await deleteProductFromCartUseCase.ExecuteAsync(item.ProductId);
+    }
+}

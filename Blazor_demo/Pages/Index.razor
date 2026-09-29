@@ -86,7 +86,7 @@ Product Name: @product.Name
 }
 
 @code{
-    private Customer customer;
+    private Customer? customer;
 
     protected override void OnInitialized()
     {
@@ -98,10 +98,10 @@ Product Name: @product.Name
     {
     }
 
-    private VisibilityComponent visibilityComponent;
+    private VisibilityComponent? visibilityComponent;
 
     void Toggle(){
-        this.visibilityComponent.SetVisibility();
+        this.visibilityComponent?.SetVisibility();
     }
 
     private int selectedProductId = 0;

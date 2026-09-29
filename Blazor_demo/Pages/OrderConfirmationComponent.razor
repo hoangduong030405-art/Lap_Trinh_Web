@@ -1,0 +1,97 @@
+@page "/orderconfirm/{uniqueId}"
+@using eShop.CoreBusiness.Models
+@using eShop.UseCases.OrderConfirmationScreen
+@inject IViewOrderConfirmationUseCase viewOrderConfirmationUseCase
+
+<div class="py-3">
+    @if (order == null)
+    {
+        <div class="alert alert-danger py-4 text-center">
+            <h5>Order not found!</h5>
+            <p class="text-muted">We could not find any order with confirmation code: @UniqueId</p>
+            <NavLink href="products" class="btn btn-primary mt-2">Back to Products</NavLink>
+        </div>
+    }
+    else
+    {
+        <div class="card border-success shadow-sm mb-4">
+            <div class="card-header bg-success text-white py-3 text-center">
+                <h3 class="mb-1"><span class="oi oi-circle-check"></span> Order Confirmed!</h3>
+                <p class="mb-0">Thank you for your purchase. Your order has been placed successfully.</p>
+            </div>
+            <div class="card-body p-4">
+                <div class="row mb-4">
+                    <div class="col-sm-6 mb-3 mb-sm-0">
+                        <h6 class="text-muted text-uppercase mb-2">Order Information</h6>
+                        <p class="mb-1"><strong>Order ID:</strong> #@order.OrderId</p>
+                        <p class="mb-1"><strong>Confirmation Code:</strong> <span class="badge bg-light text-dark border">@order.UniqueId</span></p>
+                        <p class="mb-0"><strong>Order Date:</strong> @(order.DatePlaced?.ToLocalTime().ToString("f") ?? "N/A")</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="text-muted text-uppercase mb-2">Shipping Details</h6>
+                        <p class="mb-1"><strong>Recipient:</strong> @order.CustomerName</p>
+                        <p class="mb-1"><strong>Address:</strong> @order.CustomerAddress</p>
+                        <p class="mb-0"><strong>Location:</strong> @order.CustomerCity, @order.CustomerStateProvince, @order.CustomerCountry</p>
+                    </div>
+                </div>
+
+                <h5 class="mb-3">Purchased Items</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-center" style="width: 100px;">Quantity</th>
+                                <th class="text-end" style="width: 130px;">Unit Price</th>
+                                <th class="text-end" style="width: 130px;">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in order.LineItems)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-semibold">@item.Product?.Name</div>
+                                        <small class="text-muted">@item.Product?.Brand</small>
+                                    </td>
+                                    <td class="text-center">@item.Quantity</td>
+                                    <td class="text-end">@item.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                                    <td class="text-end fw-bold">@item.Total.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-light">
+                                <td colspan="3" class="text-end fw-bold fs-5">Grand Total:</td>
+                                <td class="text-end fw-bold fs-5 text-danger">@order.TotalPrice.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="text-center mt-4">
+                    <NavLink href="products" class="btn btn-primary btn-lg px-4">
+                        <span class="oi oi-arrow-left"></span> Continue Shopping
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string UniqueId { get; set; } = string.Empty;
+
+    private Order? order;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (!string.IsNullOrEmpty(UniqueId))
+        {
+            order = viewOrderConfirmationUseCase.Execute(UniqueId);
+        }
+    }
+}

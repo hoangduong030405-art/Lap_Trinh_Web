@@ -1,6 +1,6 @@
 using eShop.CoreBusiness.Models;
 
-namespace eShop.UseCases.SearchProductScreen;
+namespace eShop.UseCases.ViewProductScreen;
 
 public interface IViewProduct
 {

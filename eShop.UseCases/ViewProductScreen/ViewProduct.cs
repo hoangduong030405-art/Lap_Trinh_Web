@@ -1,7 +1,7 @@
 using eShop.CoreBusiness.Models;
 using eShop.UseCases.PluginInterfaces.DataStore;
 
-namespace eShop.UseCases.SearchProductScreen;
+namespace eShop.UseCases.ViewProductScreen;
 
 public class ViewProduct : IViewProduct
 {
